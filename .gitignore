@@ -37,6 +37,8 @@ $RECYCLE.BIN/
 
 index.js
 
+.next
+
 .DS_Store
 Thumbs.db
 UserInterfaceState.xcuserstate
