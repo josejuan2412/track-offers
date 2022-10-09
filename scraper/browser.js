@@ -1,4 +1,4 @@
-const chromium = require("chrome-aws-lambda");
+const chromium = require('chrome-aws-lambda');
 require('dotenv/config');
 export class Browser {
 	constructor(browser) {
@@ -14,16 +14,20 @@ export class Browser {
 	}
 
 	static async build() {
-		const executablePath =
-			process.env.NODE_ENV === 'local'
-				? process.env.CHROMIUM_PATH
-				: await chromium.executablePath;
+		const config =
+			process.env.NODE_ENV === 'production'
+				? {
+						args: chromium.args,
+						defaultViewport: chromium.defaultViewport,
+						executablePath: await chromium.executablePath,
+						headless: true,
+				  }
+				: {
+						args: [],
+						executablePath: process.env.CHROMIUM_PATH,
+						headless: true,
+				  };
 
-		return await chromium.puppeteer.launch({
-			args: chromium.args,
-			defaultViewport: chromium.defaultViewport,
-			executablePath,
-			headless: chromium.headless,
-		});
+		return await chromium.puppeteer.launch(options);
 	}
 }
