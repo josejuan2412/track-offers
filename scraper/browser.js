@@ -1,4 +1,4 @@
-const chromium = require('chrome-aws-lambda');
+import chromium from 'chrome-aws-lambda';
 require('dotenv/config');
 export class Browser {
 	constructor(browser) {
@@ -14,7 +14,7 @@ export class Browser {
 	}
 
 	static async build() {
-		const config =
+		const options =
 			process.env.NODE_ENV === 'production'
 				? {
 						args: chromium.args,
