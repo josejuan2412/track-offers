@@ -12,7 +12,7 @@ export async function trackOffers({ browser, asin, price, description }) {
 	if (page) {
 		page.close();
 	}
-	console.log(`Total of offers: ${offers.length}`);
+	console.log(`Total of offers: ${offers.length} for this asin: "${asin}"`);
 	if (offers.length > 0) {
 		for (const offer of offers) {
 			const offerExist = await dynamoDb.getOffer(asin, offer.price);

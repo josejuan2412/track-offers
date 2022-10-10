@@ -10,6 +10,8 @@ export class Scraper {
     $("#aod-offer-list", html).each((id, item) => {
       const list = $(item);
       const offer = list.find("#aod-offer");
+      console.log(`THIS IS HTE Offer`);
+      console.log(offer);
       offer.each((index, row) => {
         let seller = $(row).find("#aod-offer-soldBy");
         const provider = $(seller)
