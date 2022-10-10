@@ -1,14 +1,14 @@
+import {writeFileSync} from 'fs';
 const { DynamoDb } = require("./db");
 
 describe.only("DynamoDb", () => {
   beforeEach(() => {
     jest.setTimeout(60000);
   });
-  test.only("Get the products", async () => {
+  test("Get the products", async () => {
     const dynamoDb = new DynamoDb();
     const products = await dynamoDb.getProducts();
-    console.log(`Products`, products);
-    // expect(products.length).toBeGreaterThan(0);
+    expect(products.length).toBeGreaterThan(0);
   });
   test("Get the product offer", async () => {
     const dynamoDb = new DynamoDb();

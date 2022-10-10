@@ -1,4 +1,4 @@
-import { DynamoDBClient, BatchExecuteStatementCommand, ScanCommand } 
+import { DynamoDBClient, ScanCommand, PutItemCommand } 
 	from "@aws-sdk/client-dynamodb";
 import { DateTime } from 'luxon';
 
@@ -37,41 +37,36 @@ export class DynamoDb extends Db {
 	async getProducts() {
 		var params = {
 			TableName: 'Products',
-			FilterExpression: 'blacklist = true',
+			FilterExpression: 'blacklist = :blacklist',
 			ExpressionAttributeValues: {
 				':blacklist': {
 					BOOL: false,
 				},
 			},
 		};
-		const command = new ScanCommand({
-			TableName: 'Products',
-			FilterExpression: 'blacklist = true',
-		});
-		console.log(`CONFIGURATION`, this.config)
-		const result =  this.db.send(command);
-		return 
-		/*var result = await this.db.scan(params).promise();
-		return result.Items.map(this.mapProduct) || [];*/
+		const command = new ScanCommand(params);
+		const result = await this.db.send(command);
+		return result.Items.map(this.mapProduct) || [];
 	}
 	async getOffers(id) {
 		var params = {
 			TableName: 'Offers',
-			KeyConditionExpression: 'asin = :asin',
+			FilterExpression: 'asin = :asin',
 			ExpressionAttributeValues: {
 				':asin': {
 					S: id,
 				},
 			},
 		};
-		var result = await this.db.query(params).promise();
+		const command = new ScanCommand(params);
+		const result = await this.db.send(command);
 		return result.Items.map(this.mapOffers) || [];
 	}
 
 	async getOffer(asin, price) {
 		var params = {
 			TableName: 'Offers',
-			KeyConditionExpression: 'asin = :asin and price = :price',
+			FilterExpression: 'asin = :asin and price = :price',
 			ExpressionAttributeValues: {
 				':asin': {
 					S: asin,
@@ -81,7 +76,8 @@ export class DynamoDb extends Db {
 				},
 			},
 		};
-		var result = await this.db.query(params).promise();
+		const command = new ScanCommand(params);
+		var result = await this.db.send(command);
 		if (result.Items.length) {
 			return result.Items.map(this.mapOffers)[0];
 		}
@@ -112,7 +108,8 @@ export class DynamoDb extends Db {
 			},
 		};
 
-		await this.db.putItem(params).promise();
+		const command = new PutItemCommand(params);
+		await this.db.send(command);
 
 		return offer;
 	}
