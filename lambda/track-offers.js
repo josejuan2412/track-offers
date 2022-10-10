@@ -1,7 +1,7 @@
 import { Scraper } from '../scraper/scraper';
 import { Browser } from '../scraper/browser';
 import { DynamoDb } from '../db/db';
-import { discordNotification } from '../notifications/discord';
+// import { discordNotification } from '../notifications/discord';
 
 export async function trackOffers({ browser, asin, price, description }) {
 	const newBrowser = new Browser(browser);
@@ -17,14 +17,14 @@ export async function trackOffers({ browser, asin, price, description }) {
 		for (const offer of offers) {
 			const offerExist = await dynamoDb.getOffer(asin, offer.price);
 			if (!offerExist) {
-				await discordNotification(
+				/*await discordNotification(
 					process.env.DISCORD_ID,
 					process.env.DISCORD_TOKEN,
 					asin,
 					offer.price,
 					description,
 					offer.checkoutUrl
-				);
+				);*/
 				await dynamoDb.upsertOffer({
 					asin,
 					price: offer.price,
