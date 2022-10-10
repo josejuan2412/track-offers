@@ -1,4 +1,5 @@
-import * as AWS from 'aws-sdk';
+import { DynamoDBClient, BatchExecuteStatementCommand, ScanCommand } 
+	from "@aws-sdk/client-dynamodb";
 import { DateTime } from 'luxon';
 
 require('dotenv/config');
@@ -21,26 +22,37 @@ export class DynamoDb extends Db {
 	db = null;
 	constructor() {
 		super();
-		const config = {
+		this.config = {
 			region: process.env.DEFAULT_REGION,
-			accessKeyId: process.env.ACCESS_KEY_ID,
-			secretAccessKey: process.env.SECRET_ACCESS_KEY,
+			apiVersion: '2012-08-10',
+			credentials: {
+				accessKeyId: process.env.ACCESS_KEY_ID,
+				secretAccessKey: process.env.SECRET_ACCESS_KEY,
+			}
 		};
-		AWS.config.update(config);
-		this.db = new AWS.DynamoDB({ apiVersion: '2012-08-10' });
+		
+		this.db = new DynamoDBClient(this.config);
 	}
+
 	async getProducts() {
 		var params = {
 			TableName: 'Products',
-			FilterExpression: 'blacklist = :blacklist',
+			FilterExpression: 'blacklist = true',
 			ExpressionAttributeValues: {
 				':blacklist': {
 					BOOL: false,
 				},
 			},
 		};
-		var result = await this.db.scan(params).promise();
-		return result.Items.map(this.mapProduct) || [];
+		const command = new ScanCommand({
+			TableName: 'Products',
+			FilterExpression: 'blacklist = true',
+		});
+		console.log(`CONFIGURATION`, this.config)
+		const result =  this.db.send(command);
+		return 
+		/*var result = await this.db.scan(params).promise();
+		return result.Items.map(this.mapProduct) || [];*/
 	}
 	async getOffers(id) {
 		var params = {

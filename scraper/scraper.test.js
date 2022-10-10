@@ -1,7 +1,7 @@
 import { Browser } from './browser';
 import { Scraper } from './scraper';
 
-describe('Scraper', () => {
+describe.skip('Scraper', () => {
 	test('get product offers', async () => {
 		const browser = new Browser(await Browser.build());
 		const scraper = new Scraper();
