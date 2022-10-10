@@ -5,6 +5,7 @@ export class Scraper {
     // page.reload(); //verify if there's a way to prevent this
     let html = await page.evaluate(() => document.body.innerHTML);
     console.log(`I RECEIVE THE HTML`);
+    console.log(html);
     const $ = cheerio.load(html);
     let offerList = [];
     $("#aod-offer-list", html).each((id, item) => {
