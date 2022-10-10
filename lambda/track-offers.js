@@ -1,7 +1,6 @@
 import { Scraper } from '../scraper/scraper';
 import { Browser } from '../scraper/browser';
 import { DynamoDb } from '../db/db';
-require('dotenv/config');
 
 export async function trackOffers({ browser, asin, price, description }) {
 	const newBrowser = new Browser(browser);
