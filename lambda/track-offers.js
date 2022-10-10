@@ -1,6 +1,7 @@
 import { Scraper } from '../scraper/scraper';
 import { Browser } from '../scraper/browser';
 import { DynamoDb } from '../db/db';
+import { discordNotification } from '../notifications/discord';
 
 export async function trackOffers({ browser, asin, price, description }) {
 	const newBrowser = new Browser(browser);
@@ -35,5 +36,5 @@ export async function trackOffers({ browser, asin, price, description }) {
 			}
 		}
 	}
-	return null;
+	return { offers };
 }
